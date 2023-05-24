@@ -1,0 +1,101 @@
+name: Hugo自动部署
+
+# 当有改动推送到hugo分支时，启动Action
+
+on: # 触发该actions
+
+  push: # 当提交时触发该事件
+
+    branches: # 指定提交到某分支才触发事件
+
+      - hugo # 指定提交到hugo分支触发事件
+
+      #2020年10月后github新建仓库默认分支改为main，注意更改
+
+jobs:
+
+  Explore-GitHub-Actions:
+
+    runs-on: ubuntu-20.04
+
+    steps:
+
+      - name: 检出仓库代码
+
+        uses: actions/checkout@v2
+
+        with:
+
+          submodules: true  # 包含子模块,也就是链接的主题
+
+          fetch-depth: 0    # Fetch all history for .GitInfo and .Lastmod
+
+          
+
+      - name: 安装hugo
+
+        uses: peaceiris/actions-hugo@v2
+
+        with:
+
+          hugo-version: '0.85.0'
+
+          extended: true
+
+          
+
+      - name: 开始构建
+
+        run: hugo --minify
+
+          
+
+      - name: 部署到服务器
+
+        uses: burnett01/rsync-deployments@4.1
+
+        with:
+
+          # 这里是 rsync 的参数 switches: -avzh --delete --exclude="" --include="" --filter=""
+
+          switches: -avzh
+
+          path: ./public/    # 将public文件夹同步到服务器下的 PATH 路径
+
+          remote_path: /www/git/hexo/link/moments #服务器的文件存放绝对路径
+
+          remote_host: ${{ secrets.DOMAIN }} #服务器域名或者IP地址
+
+          remote_port: ${{ secrets.EXPORT }} # ssh远程端口(如果没修改过ssh远程端口，默认是22)
+
+          remote_user: ${{ secrets.USER }} # 使用ssh登录的用户
+
+          remote_key: ${{ secrets.PC_PRIVATE_KEY }} # 电脑的私钥
+
+      - name: 发送邮件
+
+        uses: dawidd6/action-send-mail@v2
+
+        with:
+
+          server_address: smtp.163.com # 发送端的服务器地址
+
+          server_port: 465 # 发送端服务器的端口号
+
+          # 不知道发送服务器地址和端口号看这篇文章 https://blog.hikki.site/dd7ff60b.html
+
+          # 账号 授权码
+
+          username: ${{secrets.EMAIL_USERNAME}} # 发送的邮箱号(发送端)
+
+          password: ${{secrets.EMAIL_PASSWORD}} # 发送的邮箱授权码(发送端)
+
+          subject: Hugo  # 邮件内容标题
+
+          body: Hugo动态更新成功 # 邮件内容，支持HTML
+
+          to: ${{secrets.EMAIL_TO}} # 接收邮件账号(接收端)
+
+          from: ${{secrets.EMAIL_FROM}} # 发送的邮箱号(发送端)
+
+          content_type: text/html
