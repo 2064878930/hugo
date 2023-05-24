@@ -1,11 +1,12 @@
-[params]
-  Subtitle = "Your site's subtitle/tagline"
-  GithubID = "Your Github ID"
-  TwitterID = "Your Twitter ID"
-  AnalyticsID = "Your Google Analytics tracking code"
-  DisqusShortname = "Your Disqus shortname"
-  Summary = true  # takes true or false
-  Content = false  # takes true or false
-  # if both are set to true, summary is shown.
-  # FooterMsg = "Copyright Me 2016. Powered by Hugo."
-  mainSections = ["post"]
+name = "Slim"
+license = "MIT"
+licenselink = "https://github.com/zhe/hugo-theme-slim/blob/master/LICENSE.md"
+description = "A slim minimal theme for Hugo."
+homepage = "https://github.com/zhe/hugo-theme-slim"
+tags = ["minimal", "clean", "neat", "black white", "blog"]
+features = ["blog"]
+min_version = 0.13
+
+[author]
+    name = "Zhe Zhang"
+    homepage = "http://zhezhang.co"
